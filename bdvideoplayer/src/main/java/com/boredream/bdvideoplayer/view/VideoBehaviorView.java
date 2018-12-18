@@ -11,12 +11,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-// TODO: 2017/6/16 避免继承
-
 /**
- * 视频手势View，注意添加 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+ * 视频手势View
  */
-public class VideoBehaviorView extends FrameLayout implements GestureDetector.OnGestureListener {
+public class VideoBehaviorView extends FrameLayout implements GestureDetector.OnGestureListener,GestureDetector.OnDoubleTapListener {
 
     private GestureDetector mGestureDetector;
 
@@ -26,6 +24,7 @@ public class VideoBehaviorView extends FrameLayout implements GestureDetector.On
     private int mFingerBehavior;
     private float mCurrentVolume; // 鉴于音量范围值比较小 使用float类型施舍五入处理.
     private int mMaxVolume;
+    //亮度
     private int mCurrentBrightness, mMaxBrightness;
 
     protected Activity activity;
@@ -51,6 +50,7 @@ public class VideoBehaviorView extends FrameLayout implements GestureDetector.On
         if (context instanceof Activity) {
             mGestureDetector = new GestureDetector(context.getApplicationContext(), this);
             activity = (Activity) context;
+            //获得系统音频管理器
             am = (AudioManager) (context.getSystemService(Context.AUDIO_SERVICE));
         } else {
             throw new RuntimeException("VideoBehaviorView context must be Activity");
@@ -61,19 +61,15 @@ public class VideoBehaviorView extends FrameLayout implements GestureDetector.On
     }
 
     protected void endGesture(int behaviorType) {
-        // sub
     }
 
     protected void updateSeekUI(int delProgress) {
-        // sub
     }
 
     protected void updateVolumeUI(int max, int progress) {
-        // sub
     }
 
     protected void updateLightUI(int max, int progress) {
-        // sub
     }
 
     @Override
@@ -99,6 +95,36 @@ public class VideoBehaviorView extends FrameLayout implements GestureDetector.On
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+        return false;
+    }
+
+    /**
+     * 单击事件
+     * @param motionEvent
+     * @return
+     */
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        return false;
+    }
+
+    /**
+     * 双击事件
+     * @param motionEvent
+     * @return
+     */
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        return false;
+    }
+
+    /**
+     * 双击后事件
+     * @param motionEvent
+     * @return
+     */
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
         return false;
     }
 
@@ -178,16 +204,32 @@ public class VideoBehaviorView extends FrameLayout implements GestureDetector.On
         return false;
     }
 
+    /**
+     * 短按
+     * @param e
+     */
     @Override
     public void onShowPress(MotionEvent e) {
 
     }
 
+    /**
+     * 长按
+     * @param e
+     */
     @Override
     public void onLongPress(MotionEvent e) {
 
     }
 
+    /**
+     * 抛动作
+     * @param e1
+     * @param e2
+     * @param velocityX
+     * @param velocityY
+     * @return
+     */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return false;

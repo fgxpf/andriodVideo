@@ -62,8 +62,13 @@ public class BDVideoView extends VideoBehaviorView {
         init();
     }
 
+    /**
+     * 初始化控件
+     */
     private void init() {
+        //获取当前活动的xml布局文件的信息
         LayoutInflater inflater = LayoutInflater.from(getContext());
+        //动态加载布局
         inflater.inflate(R.layout.video_view, this);
 
         mSurfaceView = (SurfaceView) findViewById(R.id.video_surface);
@@ -100,6 +105,9 @@ public class BDVideoView extends VideoBehaviorView {
         registerNetChangedReceiver();
     }
 
+    /**
+     * 初始化播放器
+     */
     private void initPlayer() {
         mMediaPlayer = new BDVideoPlayer();
         mMediaPlayer.setCallback(new SimplePlayerCallback() {
@@ -108,10 +116,10 @@ public class BDVideoView extends VideoBehaviorView {
             public void onStateChanged(int curState) {
                 switch (curState) {
                     case BDVideoPlayer.STATE_IDLE:
-                        am.abandonAudioFocus(null);
+                        am.abandonAudioFocus(null);//释放音频焦点
                         break;
                     case BDVideoPlayer.STATE_PREPARING:
-                        am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                        am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);//获取音频焦点
                         break;
                 }
             }
@@ -142,6 +150,9 @@ public class BDVideoView extends VideoBehaviorView {
         mediaController.setMediaPlayer(mMediaPlayer);
     }
 
+    /**
+     * 显示加载进度条
+     */
     private void showLoading() {
         mLoading.setVisibility(View.VISIBLE);
     }
@@ -189,12 +200,22 @@ public class BDVideoView extends VideoBehaviorView {
         mMediaPlayer.setVideoPath(videoPath);
     }
 
+    /**
+     * 抬起
+     * @param e
+     * @return
+     */
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         mediaController.toggleDisplay();
         return super.onSingleTapUp(e);
     }
 
+    /**
+     * 按下
+     * @param e
+     * @return
+     */
     @Override
     public boolean onDown(MotionEvent e) {
         if (isLock()) {
@@ -203,6 +224,27 @@ public class BDVideoView extends VideoBehaviorView {
         return super.onDown(e);
     }
 
+    /**
+     * 双击
+     * @param motionEvent
+     * @return
+     */
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        if (isLock())
+            return false;
+        mediaController.doPauseResume();
+        return super.onDoubleTap(motionEvent);
+    }
+
+    /**
+     * 滑动
+     * @param e1
+     * @param e2
+     * @param distanceX
+     * @param distanceY
+     * @return
+     */
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         if (isLock()) {
@@ -211,6 +253,10 @@ public class BDVideoView extends VideoBehaviorView {
         return super.onScroll(e1, e2, distanceX, distanceY);
     }
 
+    /**
+     * 结束手势
+     * @param behaviorType
+     */
     @Override
     protected void endGesture(int behaviorType) {
         switch (behaviorType) {
@@ -227,21 +273,39 @@ public class BDVideoView extends VideoBehaviorView {
         }
     }
 
+    /**
+     * 更新进度UI
+     * @param delProgress
+     */
     @Override
     protected void updateSeekUI(int delProgress) {
         videoProgressOverlay.show(delProgress, mMediaPlayer.getCurrentPosition(), mMediaPlayer.getDuration());
     }
 
+    /**
+     * 更新音量UI
+     * @param max
+     * @param progress
+     */
     @Override
     protected void updateVolumeUI(int max, int progress) {
         videoSystemOverlay.show(VideoSystemOverlay.SystemType.VOLUME, max, progress);
     }
 
+    /**
+     * 更新亮度UI
+     * @param max
+     * @param progress
+     */
     @Override
     protected void updateLightUI(int max, int progress) {
         videoSystemOverlay.show(VideoSystemOverlay.SystemType.BRIGHTNESS, max, progress);
     }
 
+    /**
+     * 设置视频控制监听器
+     * @param onVideoControlListener
+     */
     public void setOnVideoControlListener(OnVideoControlListener onVideoControlListener) {
         mediaController.setOnVideoControlListener(onVideoControlListener);
     }
@@ -262,6 +326,9 @@ public class BDVideoView extends VideoBehaviorView {
 
     private NetChangedReceiver netChangedReceiver;
 
+    /**
+     * 注册接收器
+     */
     public void registerNetChangedReceiver() {
         if (netChangedReceiver == null) {
             netChangedReceiver = new NetChangedReceiver();
@@ -271,12 +338,18 @@ public class BDVideoView extends VideoBehaviorView {
         }
     }
 
+    /**
+     * 取消接收器
+     */
     public void unRegisterNetChangedReceiver() {
         if (netChangedReceiver != null) {
             activity.unregisterReceiver(netChangedReceiver);
         }
     }
 
+    /**
+     * 接收器
+     */
     private class NetChangedReceiver extends BroadcastReceiver {
 
         @Override

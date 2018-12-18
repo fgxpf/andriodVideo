@@ -30,18 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        verifyStoragePermissions(this);
-        findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                VideoDetailInfo info = MockUtils.mockData(VideoDetailInfo.class, "/mnt/sdcard/Movies/15825839-1-16.mp4");
-                VideoDetailActivity.start(MainActivity.this, info);
-            }
-        });
-
         findViewById(R.id.btn_open).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                verifyStoragePermissions(MainActivity.this);
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("video/*");//设置类型
                 intent.addCategory(Intent.CATEGORY_OPENABLE);//调用文件管理器
@@ -61,11 +53,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public static void verifyStoragePermissions(Activity activity) {
             try {
-                //检测是否有写的权限
-                int permission = ActivityCompat.checkSelfPermission(activity,
-                "android.permission.WRITE_EXTERNAL_STORAGE");
-                if (permission != PackageManager.PERMISSION_GRANTED) {
-                    // 没有写的权限，去申请写的权限，会弹出对话框
+                //检测是否有读写的权限
+                int write = ActivityCompat.checkSelfPermission(activity,
+                        "android.permission.WRITE_EXTERNAL_STORAGE");
+                int read = ActivityCompat.checkSelfPermission(activity,
+                        "android.permission.READ_EXTERNAL_STORAGE");
+                if (write != PackageManager.PERMISSION_GRANTED || read != PackageManager.PERMISSION_GRANTED) {
+                    // 没有读写的权限，去申请读写的权限，会弹出对话框
                     ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
                 }
             } catch (Exception e) {
@@ -73,33 +67,31 @@ public class MainActivity extends AppCompatActivity {
              }
         }
 
+    /**
+     * 选择文件返回
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {//是否选择，没选择就不会继续
             Uri uri = data.getData();//得到uri
-            String[] proj = {MediaStore.Video.Media.DATA};
-            String img_path = null;
-//            Cursor cursor = null;
-//            try
-//            {
-//                cursor = managedQuery(uri, proj, null, null, null);
-//                int column_index = cursor.getColumnIndex(MediaStore.Video.Media.DATA);
-//                cursor.moveToFirst();
-//                img_path = cursor.getString(column_index);
-//    //            img_path = getPath(this, uri).toString() || uri.getPath().toString()
-//            }
-//            finally {
-//                if (cursor != null)
-//                    cursor.close();
-//            }
-            img_path = getPathByUri4kitkat(MainActivity.this, uri);
+            String img_path = getPathByUri4kitkat(MainActivity.this, uri);
             VideoDetailInfo info = MockUtils.mockData(VideoDetailInfo.class, img_path);
             VideoDetailActivity.start(MainActivity.this, info);
         }
     }
 
+    /**
+     * 解析文件路径
+     * @param context
+     * @param uri
+     * @return
+     */
     @SuppressLint("NewApi")
     public static String getPathByUri4kitkat(final Context context, final Uri uri) {
+        //版本是否大于4.4
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
@@ -141,6 +133,13 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * @param context
+     * @param uri
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         final String column = "_data";

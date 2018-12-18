@@ -57,7 +57,7 @@ public class VideoDetailActivity extends AppCompatActivity {
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏,即隐藏状态栏
         }
     }
 
@@ -82,6 +82,9 @@ public class VideoDetailActivity extends AppCompatActivity {
         videoView.onDestroy();
     }
 
+    /**
+     * 返回
+     */
     @Override
     public void onBackPressed() {
         if (!DisplayUtils.isPortrait(this)) {
