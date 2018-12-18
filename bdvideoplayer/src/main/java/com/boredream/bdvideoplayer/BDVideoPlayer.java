@@ -10,25 +10,34 @@ import com.boredream.bdvideoplayer.listener.PlayerCallback;
 import java.io.IOException;
 
 /**
- * 只包含最基础的播放器功能，MediaPlayer可以替换成其他框架的播放器
+ * 播放器
  */
 public class BDVideoPlayer {
 
     private static final String TAG = "VideoPlayer";
 
+    //错误
     public static final int STATE_ERROR = -1;
+    //空闲状态
     public static final int STATE_IDLE = 0;
+    //加载中
     public static final int STATE_PREPARING = 1;
+    //加载完成
     public static final int STATE_PREPARED = 2;
+    //播放中
     public static final int STATE_PLAYING = 3;
+    //暂停
     public static final int STATE_PAUSED = 4;
+    //播放完成
     public static final int STATE_PLAYBACK_COMPLETED = 5;
 
     private MediaPlayer player;
     private int curState = STATE_IDLE;
 
     private PlayerCallback callback;
+    /**当前缓冲比率*/
     private int currentBufferPercentage;
+    /**视频路径*/
     private String path;
     private SurfaceHolder surfaceHolder;
 
@@ -69,8 +78,7 @@ public class BDVideoPlayer {
             // not ready for playback just yet, will try again later
             return;
         }
-        // we shouldn't clear the target state, because somebody might have
-        // called start() previously
+
         reset();
 
         try {
@@ -121,14 +129,17 @@ public class BDVideoPlayer {
                 }
             });
             currentBufferPercentage = 0;
+            //此处设置视频路径
             player.setDataSource(path);
+            //通过SurfaceHolder接口显示多媒体
             player.setDisplay(surfaceHolder);
+            //设置流媒体的类型
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            //设置是否使用SurfaceHolder来显示
             player.setScreenOnWhilePlaying(true);
+            //异步准备
             player.prepareAsync();
 
-            // we don't set the target state here either, but preserve the
-            // target state that was there before.
             setCurrentState(STATE_PREPARING);
         } catch (IOException | IllegalArgumentException ex) {
             Log.w(TAG, "Unable to open content: " + path, ex);
@@ -137,6 +148,9 @@ public class BDVideoPlayer {
         }
     }
 
+    /**
+     * 播放
+     */
     public void start() {
         Log.i("DDD", "start");
         if (isInPlaybackState()) {
@@ -145,11 +159,17 @@ public class BDVideoPlayer {
         }
     }
 
+    /**
+     * 重新播放
+     */
     public void restart() {
         Log.i("DDD", "restart");
         openVideo();
     }
 
+    /**
+     * 暂停
+     */
     public void pause() {
         if (isInPlaybackState()) {
             if (player.isPlaying()) {
@@ -159,6 +179,9 @@ public class BDVideoPlayer {
         }
     }
 
+    /**
+     * 重置（可重新调用处于error状态下的player对象，使其为idle）
+     */
     public void reset() {
         if (player != null) {
             player.reset();
@@ -184,17 +207,23 @@ public class BDVideoPlayer {
         }
     }
 
+    /**
+     * 停止
+     */
     public void stop() {
         if (player != null) {
             player.stop();
             player.release();
-            // TODO: 2017/6/19 = null ?
             player = null;
             surfaceHolder = null;
             setCurrentState(STATE_IDLE);
         }
     }
 
+    /**
+     * 得到文件的时间
+     * @return
+     */
     public int getDuration() {
         if (isInPlaybackState()) {
             return player.getDuration();
@@ -227,6 +256,10 @@ public class BDVideoPlayer {
         return 0;
     }
 
+    /**
+     * 是否可播放
+     * @return
+     */
     public boolean isInPlaybackState() {
         return (player != null &&
                 curState != STATE_ERROR &&

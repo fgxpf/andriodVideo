@@ -22,22 +22,31 @@ import com.boredream.bdvideoplayer.utils.NetworkUtils;
 import com.boredream.bdvideoplayer.utils.StringUtils;
 
 /**
- * 视频控制器，可替换或自定义样式
+ * 视频控制器
  */
 public class VideoControllerView extends FrameLayout {
 
     public static final int DEFAULT_SHOW_TIME = 3000;
 
+    /**返回按钮*/
     private View mControllerBack;
     private View mControllerTitle;
+    /**标题*/
     private TextView mVideoTitle;
     private View mControllerBottom;
+    /**滑动进度条*/
     private SeekBar mPlayerSeekBar;
+    /**播放暂停按钮*/
     private ImageView mVideoPlayState;
+    /**当前时间*/
     private TextView mVideoProgress;
+    /**总时间*/
     private TextView mVideoDuration;
+    /**全屏按钮*/
     private ImageView mVideoFullScreen;
+    /**屏幕锁按钮*/
     private ImageView mScreenLock;
+    /**错误提示*/
     private VideoErrorView mErrorView;
 
     private boolean isScreenLock;
@@ -138,6 +147,9 @@ public class VideoControllerView extends FrameLayout {
         mVideoTitle.setText(videoInfo.getVideoTitle());
     }
 
+    /**
+     * 切换显示
+     */
     public void toggleDisplay() {
         if (mShowing) {
             hide();
@@ -206,6 +218,7 @@ public class VideoControllerView extends FrameLayout {
         }
     };
 
+    /**是否拖动*/
     private boolean mDragging;
     private long mDraggingProgress;
     private final Runnable mShowProgress = new Runnable() {
@@ -218,6 +231,10 @@ public class VideoControllerView extends FrameLayout {
         }
     };
 
+    /**
+     * 设置进度
+     * @return
+     */
     private int setProgress() {
         if (mPlayer == null || mDragging) {
             return 0;
@@ -226,7 +243,6 @@ public class VideoControllerView extends FrameLayout {
         int duration = mPlayer.getDuration();
         if (mPlayerSeekBar != null) {
             if (duration > 0) {
-                // use long to avoid overflow
                 long pos = 1000L * position / duration;
                 mPlayerSeekBar.setProgress((int) pos);
             }
@@ -407,6 +423,9 @@ public class VideoControllerView extends FrameLayout {
         }
     };
 
+    /**
+     * 更新播放暂停状态Icon
+     */
     public void updatePausePlay() {
         if (mPlayer.isPlaying()) {
             mVideoPlayState.setImageResource(R.drawable.ic_video_pause);
@@ -415,7 +434,7 @@ public class VideoControllerView extends FrameLayout {
         }
     }
 
-    private void doPauseResume() {
+    public void doPauseResume() {
         if (mPlayer.isPlaying()) {
             pause();
         } else {

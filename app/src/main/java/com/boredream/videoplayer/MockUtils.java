@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * 数据工具类
+ */
 public class MockUtils {
 
     public static <T> T mockData(Class<T> clazz, String path) {
@@ -26,21 +29,6 @@ public class MockUtils {
         }
         return t;
     }
-
-//    public static <T> List<T> mockList(Class<T> clazz) {
-//        return mockList(clazz, 10);
-//    }
-//
-//    public static <T> List<T> mockList(Class<T> clazz, int count) {
-//        List<T> list = new ArrayList<>();
-//        for (int i = 0; i < count; i++) {
-//            T t = mockData(clazz);
-//            if (t != null) {
-//                list.add(t);
-//            }
-//        }
-//        return list;
-//    }
 
     private static <T> void setValue(Object object, Class<T> clazz, String path) throws IllegalAccessException {
         Field[] fields = clazz.getDeclaredFields();
@@ -76,16 +64,6 @@ public class MockUtils {
             value = new Random().nextDouble();
         }
         else if (clazzType == String.class) {
-//            String name = field.getName();
-//            if (name.toLowerCase().contains("img") || name.toLowerCase().contains("url")) {
-//                value = getImgUrl();
-//            }
-//            else if (name.toLowerCase().contains("video")) {
-//                value = getVideoUrl();
-//            }
-//            else {
-//                value = name + "_" + new Random().nextInt(100);
-//            }
             value = path;
         }
         else if (clazzType == boolean.class || clazzType == Boolean.class) {
