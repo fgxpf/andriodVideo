@@ -40,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent,1);
             }
         });
+
+        findViewById(R.id.btn_link).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String img_path = "http://video.acfun.cn/1b3eff2f809d40e58f5c071faeb32c30/452dea0a8d814c90b93d3a0beb266d6d-a3ee49e74af111282f9e937c83049d97-sd.mp4?customer_id=5859fdaee4b0eaf5dd325b91&start=0.0&auth_key=1545302863-101048061461629da5ab791979934c894da16ffba765rpcx12222p212p87p277d2829d08a12f-ACFUN-2b99623936f83a400b7a83f8d205c299";
+                VideoDetailInfo info = MockUtils.mockData(VideoDetailInfo.class, img_path);
+                VideoDetailActivity.start(MainActivity.this, info);
+            }
+        });
     }
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;

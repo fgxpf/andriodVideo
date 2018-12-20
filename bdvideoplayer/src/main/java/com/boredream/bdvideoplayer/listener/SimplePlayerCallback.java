@@ -1,6 +1,6 @@
 package com.boredream.bdvideoplayer.listener;
 
-import android.media.MediaPlayer;
+import io.vov.vitamio.MediaPlayer;
 
 public class SimplePlayerCallback implements PlayerCallback {
 

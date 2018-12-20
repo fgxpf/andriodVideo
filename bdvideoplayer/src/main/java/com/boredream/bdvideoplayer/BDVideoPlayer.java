@@ -1,11 +1,12 @@
 package com.boredream.bdvideoplayer;
 
+import android.content.Context;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.boredream.bdvideoplayer.listener.PlayerCallback;
+import io.vov.vitamio.MediaPlayer;
 
 import java.io.IOException;
 
@@ -31,6 +32,7 @@ public class BDVideoPlayer {
     //播放完成
     public static final int STATE_PLAYBACK_COMPLETED = 5;
 
+    private Context mContext;
     private MediaPlayer player;
     private int curState = STATE_IDLE;
 
@@ -56,7 +58,8 @@ public class BDVideoPlayer {
         }
     };
 
-    public BDVideoPlayer() {
+    public BDVideoPlayer(Context context) {
+        mContext = context;
         setCurrentState(STATE_IDLE);
     }
 
@@ -82,7 +85,7 @@ public class BDVideoPlayer {
         reset();
 
         try {
-            player = new MediaPlayer();
+            player = new MediaPlayer(mContext);
             player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                 @Override
                 public void onBufferingUpdate(MediaPlayer mp, int percent) {
@@ -134,7 +137,7 @@ public class BDVideoPlayer {
             //通过SurfaceHolder接口显示多媒体
             player.setDisplay(surfaceHolder);
             //设置流媒体的类型
-            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             //设置是否使用SurfaceHolder来显示
             player.setScreenOnWhilePlaying(true);
             //异步准备
@@ -226,7 +229,7 @@ public class BDVideoPlayer {
      */
     public int getDuration() {
         if (isInPlaybackState()) {
-            return player.getDuration();
+            return (int) player.getDuration();
         }
 
         return -1;
@@ -234,7 +237,7 @@ public class BDVideoPlayer {
 
     public int getCurrentPosition() {
         if (isInPlaybackState()) {
-            return player.getCurrentPosition();
+            return (int) player.getCurrentPosition();
         }
         return 0;
     }

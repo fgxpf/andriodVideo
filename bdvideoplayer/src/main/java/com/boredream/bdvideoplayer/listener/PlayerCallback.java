@@ -1,6 +1,6 @@
 package com.boredream.bdvideoplayer.listener;
 
-import android.media.MediaPlayer;
+import io.vov.vitamio.MediaPlayer;
 
 /**
  * 视频操作回调，是将系统MediaPlayer的常见回调封装了起来
@@ -34,15 +34,14 @@ public interface PlayerCallback {
      *
      * @param what  错误类型
      *              <ul>
-     *              <li>{@link android.media.MediaPlayer#MEDIA_ERROR_UNKNOWN}
-     *              <li>{@link android.media.MediaPlayer#MEDIA_ERROR_SERVER_DIED}
+     *              <li>{@link io.vov.vitamio.MediaPlayer#MEDIA_ERROR_UNKNOWN}
      *              </ul>
      * @param extra 特殊错误码
      *              <ul>
-     *              <li>{@link android.media.MediaPlayer#MEDIA_ERROR_IO}
-     *              <li>{@link android.media.MediaPlayer#MEDIA_ERROR_MALFORMED}
-     *              <li>{@link android.media.MediaPlayer#MEDIA_ERROR_UNSUPPORTED}
-     *              <li>{@link android.media.MediaPlayer#MEDIA_ERROR_TIMED_OUT}
+     *              <li>{@link io.vov.vitamio.MediaPlayer#MEDIA_ERROR_IO}
+     *              <li>{@link io.vov.vitamio.MediaPlayer#MEDIA_ERROR_MALFORMED}
+     *              <li>{@link io.vov.vitamio.MediaPlayer#MEDIA_ERROR_UNSUPPORTED}
+     *              <li>{@link io.vov.vitamio.MediaPlayer#MEDIA_ERROR_TIMED_OUT}
      *              <li><code>MEDIA_ERROR_SYSTEM (-2147483648)</code> - low-level system error.
      *              </ul>
      */

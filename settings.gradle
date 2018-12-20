@@ -1,1 +1,1 @@
-include ':app', ':bdvideoplayer'
+include ':app', ':bdvideoplayer', ':vitamio'
