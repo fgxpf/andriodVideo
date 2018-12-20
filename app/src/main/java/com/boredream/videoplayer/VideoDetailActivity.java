@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+import io.vov.vitamio.Vitamio;
 
 import com.boredream.bdvideoplayer.listener.SimpleOnVideoControlListener;
 import com.boredream.bdvideoplayer.BDVideoView;
@@ -24,6 +25,7 @@ public class VideoDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Vitamio.isInitialized(getApplicationContext());
         setContentView(R.layout.activity_video_detail);
 
         VideoDetailInfo info = (VideoDetailInfo) getIntent().getSerializableExtra("info");

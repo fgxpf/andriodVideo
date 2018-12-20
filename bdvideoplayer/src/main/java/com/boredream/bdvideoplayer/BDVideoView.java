@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
+import io.vov.vitamio.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcelable;
@@ -18,6 +19,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
+import io.vov.vitamio.widget.VideoView;
 
 import com.boredream.bdvideoplayer.bean.IVideoInfo;
 import com.boredream.bdvideoplayer.listener.OnVideoControlListener;
@@ -33,7 +35,7 @@ import com.boredream.bdvideoplayer.view.VideoSystemOverlay;
  */
 public class BDVideoView extends VideoBehaviorView {
 
-    private SurfaceView mSurfaceView;
+    private VideoView mSurfaceView;
     private View mLoading;
     private VideoControllerView mediaController;
     private VideoSystemOverlay videoSystemOverlay;
@@ -49,39 +51,40 @@ public class BDVideoView extends VideoBehaviorView {
 
     public BDVideoView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public BDVideoView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public BDVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
     /**
      * 初始化控件
      */
-    private void init() {
+    private void init(Context context) {
         //获取当前活动的xml布局文件的信息
         LayoutInflater inflater = LayoutInflater.from(getContext());
         //动态加载布局
         inflater.inflate(R.layout.video_view, this);
 
-        mSurfaceView = (SurfaceView) findViewById(R.id.video_surface);
+        mSurfaceView = (VideoView) findViewById(R.id.video_surface);
         mLoading = findViewById(R.id.video_loading);
         mediaController = (VideoControllerView) findViewById(R.id.video_controller);
         videoSystemOverlay = (VideoSystemOverlay) findViewById(R.id.video_system_overlay);
         videoProgressOverlay = (VideoProgressOverlay) findViewById(R.id.video_progress_overlay);
 
-        initPlayer();
+        initPlayer(context);
 
         mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                holder.setFormat(PixelFormat.RGBX_8888);
                 initWidth = getWidth();
                 initHeight = getHeight();
 
@@ -108,8 +111,8 @@ public class BDVideoView extends VideoBehaviorView {
     /**
      * 初始化播放器
      */
-    private void initPlayer() {
-        mMediaPlayer = new BDVideoPlayer();
+    private void initPlayer(Context context) {
+        mMediaPlayer = new BDVideoPlayer(context);
         mMediaPlayer.setCallback(new SimplePlayerCallback() {
 
             @Override
