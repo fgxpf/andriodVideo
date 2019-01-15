@@ -14,14 +14,16 @@
         android:layout_margin="10dp"
         android:text="OPEN" />
 
-    <Button
-        android:id="@+id/btn_link"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="link" />
+        android:ems="10"
+        android:inputType="textUri"
+        android:hint="请输入网址" />
 
     <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

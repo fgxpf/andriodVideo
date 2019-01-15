@@ -33,6 +33,8 @@ public class BDVideoPlayer {
     public static final int STATE_PLAYBACK_COMPLETED = 5;
 
     private Context mContext;
+
+
     private MediaPlayer player;
     private int curState = STATE_IDLE;
 
@@ -45,6 +47,10 @@ public class BDVideoPlayer {
 
     public void setCallback(PlayerCallback PlayerCallback) {
         this.callback = PlayerCallback;
+    }
+
+    public MediaPlayer getPlayer() {
+        return player;
     }
 
     private MediaPlayer.OnErrorListener mErrorListener = new MediaPlayer.OnErrorListener() {

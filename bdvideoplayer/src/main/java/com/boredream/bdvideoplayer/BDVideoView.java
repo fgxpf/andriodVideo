@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
@@ -12,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +21,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+
 import io.vov.vitamio.widget.VideoView;
 
 import com.boredream.bdvideoplayer.bean.IVideoInfo;
@@ -30,10 +34,14 @@ import com.boredream.bdvideoplayer.view.VideoControllerView;
 import com.boredream.bdvideoplayer.view.VideoProgressOverlay;
 import com.boredream.bdvideoplayer.view.VideoSystemOverlay;
 
+import java.util.logging.Logger;
+
+import static io.vov.vitamio.utils.Log.TAG;
+
 /**
  * 视频播放器View
  */
-public class BDVideoView extends VideoBehaviorView {
+public class BDVideoView extends VideoBehaviorView{
 
     private VideoView mSurfaceView;
     private View mLoading;
@@ -125,6 +133,11 @@ public class BDVideoView extends VideoBehaviorView {
                         am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);//获取音频焦点
                         break;
                 }
+            }
+
+            @Override
+            public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                ChangeSize(width, height);
             }
 
             @Override
@@ -324,11 +337,42 @@ public class BDVideoView extends VideoBehaviorView {
             getLayoutParams().width = FrameLayout.LayoutParams.MATCH_PARENT;
             getLayoutParams().height = FrameLayout.LayoutParams.MATCH_PARENT;
         }
+        ChangeSize(mMediaPlayer.getPlayer().getVideoWidth(), mMediaPlayer.getPlayer().getVideoHeight());
+    }
 
+    public void ChangeSize(int width, int height) {
+        if (width == 0 || height == 0) {
+            Log.e(TAG, "invalid video width(" + width + ") or height(" + height
+                    + ")");
+            return;
+        }
+
+        //播放器的尺寸
+        int mSurfaceViewWidth;
+        int mSurfaceViewHeight;
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        if(width < height)
+        {
+            if (getResources().getConfiguration().orientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                //竖屏时，使用初始尺寸
+                mSurfaceViewWidth = initWidth;
+                mSurfaceViewHeight = initHeight;
+            } else{
+                //横屏时，获取屏幕尺寸
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                mSurfaceViewWidth = displayMetrics.widthPixels;
+                mSurfaceViewHeight = displayMetrics.heightPixels;
+            }
+            int w = mSurfaceViewHeight * width / height;
+            int margin = (mSurfaceViewWidth - w) / 2;
+            lp.setMargins(margin, 0, margin, 0);
+        }
+
+        mSurfaceView.setLayoutParams(lp);
     }
 
     private NetChangedReceiver netChangedReceiver;
-
     /**
      * 注册接收器
      */

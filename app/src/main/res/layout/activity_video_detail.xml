@@ -10,14 +10,20 @@
         android:id="@+id/vv"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="#888">
+        android:background="#030303">
 
     </com.boredream.bdvideoplayer.BDVideoView>
 
     <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="32dp"
-        android:text="下面放各种视频信息"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:lineSpacingExtra="10sp"
+        android:text="视频信息"
+        android:textAllCaps="true"
+        android:scrollbars = "vertical"
+        android:textColor="@color/bg_video_controller"
+        android:textSize="18sp" />
 
 </LinearLayout>

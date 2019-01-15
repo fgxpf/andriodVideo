@@ -1,5 +1,7 @@
 package com.boredream.bdvideoplayer.bean;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 /**
@@ -17,4 +19,13 @@ public interface IVideoInfo extends Serializable {
      */
     String getVideoPath();
 
+    /**
+     * 视频大小
+     */
+    String getSize();
+
+    /**
+     * 视频时长
+     */
+    String getDuration();
 }
