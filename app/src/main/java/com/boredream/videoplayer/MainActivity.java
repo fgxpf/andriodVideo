@@ -1,42 +1,27 @@
 package com.boredream.videoplayer;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        list = (ListView) findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
         EditText etOne= (EditText) findViewById(R.id.editText);
         etOne.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -95,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             "android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE" };
+            "android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.MOUNT_UNMOUNT_FILESYSTEMS"};
 
     /**
      * 动态获取权限
@@ -141,58 +129,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<VideoDetailInfo> infos;
-    private ListView list;
+    private RecyclerView mRecyclerView;
+    private adapter mAdapter;
 
     /**
      * 显示列表
      */
     private void ShowItems() {
         infos = MockUtils.readXml();
-        List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map;
-        for(VideoDetailInfo info : infos)
-        {
-            map = new HashMap<>();
-            map.put("name", info.getVideoTitle());
-            map.put("duration", info.getDuration() != null ? info.getDuration() : "时长未知");
-            map.put("image", MockUtils.GetBitmap(info));
-            data.add(map);
-        }
-        SimpleAdapter adapter = new SimpleAdapter(this, data,
-                R.layout.item,new String[] { "image", "name", "duration" },
-                new int[] { R.id.imageView,R.id.item_name,R.id.item_duration });
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAdapter = new adapter(this);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setDatas(infos);
+        ((DefaultItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (view.getId()) {
-                    case R.id.close:
-                        break;
-                    default:
-                        VideoDetailInfo info = infos.get(position);
-                        VideoDetailActivity.start(MainActivity.this, info);
-                        break;
-                }
-            }
-        });
-        adapter.setViewBinder(new SimpleAdapter.ViewBinder(){
-            @Override
-            public boolean setViewValue(View view,Object data,String textRepresentation){
-                if(view instanceof ImageView && data instanceof Bitmap){
-                    ImageView iv=(ImageView)view;
-                    iv.setImageBitmap((Bitmap)data);
-                    return true;
-                }
-                else return false;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 查看源码可知State有三种状态：SCROLL_STATE_IDLE（静止）、SCROLL_STATE_DRAGGING（上升）、SCROLL_STATE_SETTLING（下落）
+                if (newState == SCROLL_STATE_IDLE) { // 滚动静止时才加载图片资源，极大提升流畅度
+                    mAdapter.setScrolling(false);
+                    mAdapter.notifyItemRangeChanged(0,mAdapter.getItemCount()); // notify调用后onBindViewHolder会响应调用
+                } else
+                    mAdapter.setScrolling(true);
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
     }
 
     private void ClearItems() {
-//        if(infos.size() > 0)
-//            infos.clear();
-//        if(list.getChildCount() > 0)
-//            list.getAdapter().();
+        if(infos.size() > 0)
+            infos.clear();
     }
 
     @Override
@@ -204,12 +169,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        new Thread() {
-//            @Override
-//            public void run() {
-                ShowItems();
-//            }
-//        }.start();
+        ShowItems();
     }
 
     @Override

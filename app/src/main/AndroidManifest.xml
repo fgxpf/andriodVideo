@@ -5,6 +5,7 @@
 <!--静态获取权限，4.4之后好像没用-->
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
     <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 
     <application
         android:allowBackup="true"

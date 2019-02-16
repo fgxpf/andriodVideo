@@ -7,6 +7,7 @@
     <color name="transparent">#0000</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="gray">#EBE9E7</color>
 
     <color name="color_efefef">#efefef</color>
     <color name="bg_video_controller">#A6000000</color>
