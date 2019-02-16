@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/gray"
     tools:context="com.boredream.videoplayer.MainActivity">
 
     <Button
@@ -22,9 +23,10 @@
         android:inputType="textUri"
         android:hint="请输入网址" />
 
-    <ListView
-        android:id="@+id/listView"
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recycler_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -1,7 +1,5 @@
 package com.boredream.videoplayer;
 
-import android.graphics.Bitmap;
-
 import com.boredream.bdvideoplayer.bean.IVideoInfo;
 
 /**

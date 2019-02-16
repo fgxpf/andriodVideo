@@ -11,26 +11,27 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.util.Xml;
+import android.widget.Toast;
 
 import com.boredream.bdvideoplayer.utils.StringUtils;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import static io.vov.vitamio.utils.Log.TAG;
 
 /**
  * 数据工具类
@@ -75,27 +76,6 @@ public class MockUtils {
             }
             else
             {
-//                new Thread(){
-//                    @Override
-//                    public void run()
-//                    {
-//                        try
-//                        {
-//                            URL u = new URL(path);
-//                            HttpURLConnection urlcon = (HttpURLConnection) u.openConnection();
-//                            long fileLength =  urlcon.getContentLength();
-//                            object.setSize(formatSize(fileLength));
-//                        }
-//                        catch (MalformedURLException e)
-//                        {
-//                            e.printStackTrace();
-//                        }
-//                        catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        //把网络访问的代码放在这里
-//                    }
-//                }.start();
                 retriever.setDataSource(path, new HashMap());
             }
             String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
@@ -135,9 +115,21 @@ public class MockUtils {
      *
      * @param info
      */
-    public static void saveXml(VideoDetailInfo info) {
+    public static void saveOneToXml(VideoDetailInfo info) {
         List<VideoDetailInfo> infos = readXml();
         boolean isContain = false;
+        for (VideoDetailInfo copyInfo : infos) {
+            if(copyInfo.getVideoPath().equals(info.getVideoPath()))
+                isContain = true;
+        }
+        if(!isContain)
+        {
+            infos.add(info);
+        }
+        saveXml(infos);
+    }
+
+    public static void saveXml(List<VideoDetailInfo> infos) {
         try {
             // 获得一个序列化工具
             XmlSerializer serializer = Xml.newSerializer();
@@ -150,9 +142,6 @@ public class MockUtils {
             // 参数一：命名空间   参数二：标签名称
             serializer.startTag(null, "items");
             for (VideoDetailInfo copyInfo : infos) {
-                if(copyInfo.getVideoPath().equals(info.getVideoPath()))
-                    isContain = true;
-
                 // 开始子标签
                 serializer.startTag(null, "item");
                 // 设置属性
@@ -165,17 +154,6 @@ public class MockUtils {
                 //结束子标签
                 serializer.endTag(null, "item");
             }
-            if(!isContain)
-            {
-                serializer.startTag(null, "item");
-                serializer.attribute(null, "title", info.getVideoTitle());
-                serializer.attribute(null, "type", info.getType());
-                serializer.attribute(null, "duration", info.getDuration() != null ? info.getDuration() : "null");
-                serializer.attribute(null, "size", info.getSize() != null ? info.getSize() : "null");
-                serializer.attribute(null, "path", info.getVideoPath());
-                serializer.attribute(null, "isSD", info.isSD());
-                serializer.endTag(null, "item");
-            }
             //结束根标签
             serializer.endTag(null, "items");
             serializer.endDocument();
@@ -185,6 +163,29 @@ public class MockUtils {
         }
     }
 
+    /** 删除单个文件
+     * @param path 要删除的文件的路径
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteFile(String path) {
+        File file = new File(path);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            Log.d(TAG, "deleteFile: "+file.getPath());
+            Log.d(TAG, "deleteFile: "+file.getAbsolutePath());
+            System.gc();
+            if (file.getAbsoluteFile().delete()) {
+                Toast.makeText(MainActivity.getContext(), "删除文件成功！", Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+                Toast.makeText(MainActivity.getContext(), "删除文件失败！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } else {
+            Toast.makeText(MainActivity.getContext(), "文件不存在！", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
 
     /**
      * 读取XML文件,使用pull解析

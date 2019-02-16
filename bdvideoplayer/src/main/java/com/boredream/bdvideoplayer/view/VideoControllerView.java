@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -33,6 +34,8 @@ public class VideoControllerView extends FrameLayout {
     private View mControllerTitle;
     /**标题*/
     private TextView mVideoTitle;
+    /**布局按钮*/
+    private Button mVideoLayout;
     private View mControllerBottom;
     /**滑动进度条*/
     private SeekBar mPlayerSeekBar;
@@ -49,6 +52,8 @@ public class VideoControllerView extends FrameLayout {
     /**错误提示*/
     private VideoErrorView mErrorView;
 
+    /**1为原始默认布局，2为全屏铺满*/
+    private int video_layout_param = 1;
     private boolean isScreenLock;
     private boolean mShowing;
     private boolean mAllowUnWifiPlay;
@@ -95,6 +100,13 @@ public class VideoControllerView extends FrameLayout {
         // top
         mControllerTitle = findViewById(R.id.video_controller_title);
         mVideoTitle = (TextView) mControllerTitle.findViewById(R.id.video_title);
+        mVideoLayout = (Button) mControllerTitle.findViewById(R.id.video_layout);
+        mVideoLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeLayout();
+            }
+        });
         // bottom
         mControllerBottom = findViewById(R.id.video_controller_bottom);
         mPlayerSeekBar = (SeekBar) mControllerBottom.findViewById(R.id.player_seek_bar);
@@ -158,6 +170,23 @@ public class VideoControllerView extends FrameLayout {
         }
     }
 
+    /**
+     * 切换布局
+     */
+    public void ChangeLayout() {
+        if(video_layout_param == 1)
+        {
+            video_layout_param = 2;
+            mVideoLayout.setText("全屏");
+        }
+        else
+        {
+            video_layout_param = 1;
+            mVideoLayout.setText("默认");
+        }
+
+    }
+
     public void show() {
         show(DEFAULT_SHOW_TIME);
     }
@@ -179,6 +208,11 @@ public class VideoControllerView extends FrameLayout {
 
         if (!DisplayUtils.isPortrait(getContext())) {
             mScreenLock.setVisibility(VISIBLE);
+            mVideoLayout.setVisibility(VISIBLE);
+        }
+        else
+        {
+            mVideoLayout.setVisibility(GONE);
         }
 
         mShowing = true;
@@ -198,10 +232,7 @@ public class VideoControllerView extends FrameLayout {
             return;
         }
 
-        if (!DisplayUtils.isPortrait(getContext())) {
-            // 横屏才消失
-            mControllerBack.setVisibility(GONE);
-        }
+        mControllerBack.setVisibility(GONE);
         mControllerTitle.setVisibility(GONE);
         mControllerBottom.setVisibility(GONE);
         mScreenLock.setVisibility(GONE);
@@ -466,9 +497,11 @@ public class VideoControllerView extends FrameLayout {
             mControllerBack.setVisibility(VISIBLE);
             mVideoFullScreen.setVisibility(View.VISIBLE);
             mScreenLock.setVisibility(GONE);
+            mVideoLayout.setVisibility(GONE);
         } else {
             mVideoFullScreen.setVisibility(View.GONE);
             if (mShowing) {
+                mVideoLayout.setVisibility(VISIBLE);
                 mScreenLock.setVisibility(VISIBLE);
             }
         }

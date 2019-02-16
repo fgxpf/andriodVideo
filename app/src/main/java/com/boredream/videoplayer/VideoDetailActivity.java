@@ -2,34 +2,19 @@ package com.boredream.videoplayer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.util.Xml;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.Vitamio;
 
 import com.boredream.bdvideoplayer.listener.SimpleOnVideoControlListener;
 import com.boredream.bdvideoplayer.BDVideoView;
 import com.boredream.bdvideoplayer.utils.DisplayUtils;
-
-import org.xmlpull.v1.XmlSerializer;
-
-import java.io.OutputStream;
-import java.util.logging.Logger;
-
-import static io.vov.vitamio.utils.Log.TAG;
 
 public class VideoDetailActivity extends AppCompatActivity{
 
@@ -57,7 +42,7 @@ public class VideoDetailActivity extends AppCompatActivity{
 
             @Override
             public void onRetry(int errorStatus) {
-                // TODO: 2017/6/20 调用业务接口重新获取数据
+                // 调用业务接口重新获取数据
                 // get info and call method "videoView.startPlayVideo(info);"
             }
 
@@ -74,7 +59,7 @@ public class VideoDetailActivity extends AppCompatActivity{
         new Thread() {
             @Override
             public void run() {
-                MockUtils.saveXml(info);
+                MockUtils.saveOneToXml(info);
             }
         }.start();
         videoView.startPlayVideo(info);
@@ -112,8 +97,6 @@ public class VideoDetailActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast toast = Toast.makeText(VideoDetailActivity.this, "destroy", Toast.LENGTH_SHORT);
-        toast.show();
         videoView.onDestroy();
     }
 

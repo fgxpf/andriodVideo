@@ -1,43 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
-    android:padding="5dp"
-    android:background="@color/colorAccent"
-    android:orientation="horizontal">
+    android:layout_height="102dp"
+    android:background="@drawable/item_shape"
+    android:clickable="true"
+    app:ios="false"
+    app:leftSwipe="true"
+    app:swipeEnable="true">
+
+    <!--Item-->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_vertical_margin"
+        >
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="160dp"
             android:layout_height="90dp"
-            android:src="@drawable/ic_launcher" />
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
+            android:src="#858585" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/item_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="name" />
-
-            <TextView
-                android:id="@+id/item_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="duration"
-                android:gravity="bottom" />
-
-        </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/close"
+        <TextView
+            android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            app:srcCompat="@drawable/ic_music_close" />
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_marginLeft="10dp"
+            android:text="name" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/item_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentBottom="true"
+            android:text="duration"
+            />
+    </RelativeLayout>
+
+    <!-- 以下都是侧滑菜单的内容依序排列 -->
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="#ff4a57"
+        android:text="删除"
+        android:textColor="@android:color/white"/>
+
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

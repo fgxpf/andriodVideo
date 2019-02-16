@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="44dp"
@@ -12,9 +12,22 @@
         android:id="@+id/video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:layout_marginLeft="32dp"
+        android:layout_marginRight="100dp"
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="14sp" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/video_layout"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitCenter"
+        android:background="@drawable/video_size"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:text="默认"/>
+
+</RelativeLayout>
