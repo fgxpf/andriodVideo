@@ -191,7 +191,6 @@ public class VideoControllerView extends FrameLayout {
             video_layout_param = 1;
             mVideoLayout.setText("默认");
         }
-
     }
 
     public void show() {

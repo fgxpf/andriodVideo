@@ -1,16 +1,16 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '28.0.3'
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
-        applicationId "com.boredream.videoplayer"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
+        //RenderScript向下兼容
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     }
@@ -20,23 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':bdvideoplayer')
-
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:appcompat-v7:26.+'
-    implementation "com.android.support:recyclerview-v7:26.+"
-    implementation project(':vitamio')
-    implementation project(':library')
-    implementation 'com.github.bumptech.glide:glide:3.5.2'
-    implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.3.0'
-    implementation 'com.github.Hitomis:CircleMenu:v1.1.0'
 }

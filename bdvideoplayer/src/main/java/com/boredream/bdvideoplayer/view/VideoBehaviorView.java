@@ -157,7 +157,7 @@ public class VideoBehaviorView extends FrameLayout implements GestureDetector.On
         switch (mFingerBehavior) {
             case FINGER_BEHAVIOR_PROGRESS: { // 进度变化
                 // 默认滑动一个屏幕 视频移动八分钟.
-                int delProgress = (int) (1.0f * distanceX / width * 480 * 1000);
+                int delProgress = (int) (1.0f * distanceX / width * 60 * 1000);
                 // 更新快进弹框
                 updateSeekUI(delProgress);
                 break;
