@@ -91,7 +91,7 @@ public class adapter extends RecyclerView.Adapter {
         {
             final Boolean[] ischecked = new Boolean[]{false};
             AlertDialog dialog = new AlertDialog.Builder(mContext).setTitle("删除视频")
-                    .setIcon(R.drawable.oval_gray_solid)
+                    .setIcon(R.drawable.alert_point)
                     .setNegativeButton("取消", null)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
