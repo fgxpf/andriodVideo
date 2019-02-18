@@ -55,6 +55,11 @@ public class VideoDetailActivity extends AppCompatActivity{
             public void onFullScreen() {
                 DisplayUtils.toggleScreenOrientation(VideoDetailActivity.this);
             }
+
+            @Override
+            public void onChangeLayout() {
+                videoView.OnLayoutChange();
+            }
         });
         new Thread() {
             @Override

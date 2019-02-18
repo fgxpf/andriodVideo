@@ -16,4 +16,9 @@ public class SimpleOnVideoControlListener implements OnVideoControlListener {
     public void onRetry(int errorStatus) {
 
     }
+
+    @Override
+    public void onChangeLayout() {
+
+    }
 }

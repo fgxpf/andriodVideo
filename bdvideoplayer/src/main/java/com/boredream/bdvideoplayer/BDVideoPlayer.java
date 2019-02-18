@@ -258,6 +258,10 @@ public class BDVideoPlayer {
         return isInPlaybackState() && player.isPlaying();
     }
 
+    public boolean isPlayCompleted() {
+        return isInPlaybackState() && getCurrentPosition() == getDuration();
+    }
+
     public int getBufferPercentage() {
         if (player != null) {
             return currentBufferPercentage;

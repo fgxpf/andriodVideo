@@ -61,6 +61,10 @@ public class VideoControllerView extends FrameLayout {
     private IVideoInfo videoInfo;
     private OnVideoControlListener onVideoControlListener;
 
+    public int getVideo_layout_param() {
+        return video_layout_param;
+    }
+
     public void setOnVideoControlListener(OnVideoControlListener onVideoControlListener) {
         this.onVideoControlListener = onVideoControlListener;
     }
@@ -105,6 +109,9 @@ public class VideoControllerView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 ChangeLayout();
+                if (onVideoControlListener != null) {
+                    onVideoControlListener.onChangeLayout();
+                }
             }
         });
         // bottom
@@ -469,7 +476,10 @@ public class VideoControllerView extends FrameLayout {
         if (mPlayer.isPlaying()) {
             pause();
         } else {
-            play();
+            if(mPlayer.isPlayCompleted())
+                restart();
+            else
+                play();
         }
     }
 
@@ -481,6 +491,11 @@ public class VideoControllerView extends FrameLayout {
 
     private void play() {
         mPlayer.start();
+        show();
+    }
+
+    public void restart() {
+        mPlayer.restart();
         show();
     }
 
@@ -498,8 +513,10 @@ public class VideoControllerView extends FrameLayout {
             mVideoFullScreen.setVisibility(View.VISIBLE);
             mScreenLock.setVisibility(GONE);
             mVideoLayout.setVisibility(GONE);
+            mVideoTitle.setPadding(0,8,0,0);
         } else {
             mVideoFullScreen.setVisibility(View.GONE);
+            mVideoTitle.setPadding(0,40,0,0);
             if (mShowing) {
                 mVideoLayout.setVisibility(VISIBLE);
                 mScreenLock.setVisibility(VISIBLE);

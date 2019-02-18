@@ -26,4 +26,6 @@ public interface OnVideoControlListener {
      */
     void onRetry(int errorStatus);
 
+    void onChangeLayout();
+
 }
