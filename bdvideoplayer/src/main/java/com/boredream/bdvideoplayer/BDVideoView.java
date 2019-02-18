@@ -337,6 +337,10 @@ public class BDVideoView extends VideoBehaviorView{
             getLayoutParams().width = FrameLayout.LayoutParams.MATCH_PARENT;
             getLayoutParams().height = FrameLayout.LayoutParams.MATCH_PARENT;
         }
+        OnLayoutChange();
+    }
+
+    public void OnLayoutChange() {
         ChangeSize(mMediaPlayer.getPlayer().getVideoWidth(), mMediaPlayer.getPlayer().getVideoHeight());
     }
 
@@ -352,7 +356,7 @@ public class BDVideoView extends VideoBehaviorView{
         int mSurfaceViewHeight;
 
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        if(width < height)
+        if(mediaController.getVideo_layout_param() == 1)
         {
             if (getResources().getConfiguration().orientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                 //竖屏时，使用初始尺寸
@@ -364,9 +368,20 @@ public class BDVideoView extends VideoBehaviorView{
                 mSurfaceViewWidth = displayMetrics.widthPixels;
                 mSurfaceViewHeight = displayMetrics.heightPixels;
             }
-            int w = mSurfaceViewHeight * width / height;
-            int margin = (mSurfaceViewWidth - w) / 2;
-            lp.setMargins(margin, 0, margin, 0);
+            if(mSurfaceViewWidth/mSurfaceViewHeight > width/height)
+            {
+                int w = mSurfaceViewHeight * width / height;
+                int margin = (mSurfaceViewWidth - w) / 2;
+                lp.setMargins(margin, 0, margin, 0);
+            }
+            else
+            {
+                int h = mSurfaceViewWidth * height / width;
+                int margin = (mSurfaceViewHeight - h) / 2;
+                lp.setMargins(0, margin, 0, margin);
+            }
+        } else{
+            lp.setMargins(0, 0, 0, 0);
         }
 
         mSurfaceView.setLayoutParams(lp);
